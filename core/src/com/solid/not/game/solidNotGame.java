@@ -4,10 +4,13 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -18,12 +21,14 @@ public class solidNotGame extends ApplicationAdapter {
 	public Model model;
 	public ModelInstance instance;
 	public Environment environment;
-	public CameraInputController cic;
+	public FirstPersonCameraController cic;
 	public Texture obama;
+	public TextureRegion obamaregion;
 	
 	@Override
 	public void create () {
-		obama = new Texture("core\\assets\\obamium.jpg");
+		obama = new Texture("core/assets/obamium.jpg");
+		obamaregion = new TextureRegion(obama);
 		modelBatch = new ModelBatch();
 		cam = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(10f, 10f, 10f);
@@ -36,14 +41,14 @@ public class solidNotGame extends ApplicationAdapter {
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-		cic = new CameraInputController(cam);
+		cic = new FirstPersonCameraController(cam);
 		Gdx.input.setInputProcessor(cic);
+
+
 
 		ModelBuilder modelBuilder = new ModelBuilder();
 		model = modelBuilder.createBox(5f, 5f, 5f,
-				obama.draw(,0,0)
-		new Material(),
-		VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+				new Material(TextureAttribute.createDiffuse(obamaregion)),VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 		instance = new ModelInstance(model);
 	}
 
@@ -59,7 +64,6 @@ public class solidNotGame extends ApplicationAdapter {
 
 		cic.update();
 	}
-
 	@Override
 	public void dispose() {
 		modelBatch.dispose();
