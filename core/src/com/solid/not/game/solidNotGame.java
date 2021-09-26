@@ -2,6 +2,7 @@ package com.solid.not.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class solidNotGame extends ApplicationAdapter {
@@ -19,16 +21,13 @@ public class solidNotGame extends ApplicationAdapter {
 	public PerspectiveCamera cam;
 	public ModelBatch modelBatch;
 	public Model model;
-	public ModelInstance instance;
+	public Array<ModelInstance> instances = new Array<ModelInstance>();
 	public Environment environment;
 	public FirstPersonCameraController cic;
-	public Texture obama;
-	public TextureRegion obamaregion;
+	public AssetManager manager;
 	
 	@Override
 	public void create () {
-		obama = new Texture("core/assets/obamium.jpg");
-		obamaregion = new TextureRegion(obama);
 		modelBatch = new ModelBatch();
 		cam = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(10f, 10f, 10f);
@@ -47,9 +46,8 @@ public class solidNotGame extends ApplicationAdapter {
 
 
 		ModelBuilder modelBuilder = new ModelBuilder();
-		model = modelBuilder.createBox(5f, 5f, 5f,
-				new Material(TextureAttribute.createDiffuse(obamaregion)),VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
-		instance = new ModelInstance(model);
+		model = modelBuilder.createBox(5f, 0.01f, 5f, new Material(),VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+        instances.add(new ModelInstance(model));
 	}
 
 
@@ -59,7 +57,7 @@ public class solidNotGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		modelBatch.begin(cam);
-		modelBatch.render(instance, environment);
+		modelBatch.render(instances, environment);
 		modelBatch.end();
 
 		cic.update();
