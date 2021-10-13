@@ -1,16 +1,21 @@
 package com.solid.not.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 
-public class Player extends solidNotGame{
-        public void create () {
-            manager.load("assets/player.obj", Model.class);
+public class Player{
 
-        }
-    private void load() {
-        Model player = manager.get("data/ship.obj", Model.class);
-        ModelInstance PlayerInstance = new ModelInstance(player);
+    public Model model;
+    public ObjLoader loader;
+    public ModelInstance instance;
 
+    public ModelInstance create () {
+        loader = new ObjLoader();
+        model = loader.loadModel(Gdx.files.internal("core/assets/player.obj"));
+        instance = new ModelInstance(model);
+        return instance;
     }
-    }
+
+}
