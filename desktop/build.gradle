@@ -33,6 +33,10 @@ task dist(type: Jar) {
     with jar
 }
 
+dependencies {
+    annotationProcessor 'com.badlogicgames.gdx:gdx-bullet:1.10.0'
+}
+
 
 dist.dependsOn classes
 

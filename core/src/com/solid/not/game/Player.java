@@ -11,11 +11,10 @@ public class Player{
     public ObjLoader loader;
     public ModelInstance instance;
 
-    public ModelInstance create () {
+    public void create () {
         loader = new ObjLoader();
         model = loader.loadModel(Gdx.files.internal("core/assets/player.obj"));
         instance = new ModelInstance(model);
-        return instance;
     }
 
 }
