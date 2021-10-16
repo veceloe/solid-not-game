@@ -2,6 +2,7 @@ package com.solid.not.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -39,6 +40,7 @@ public class solidNotGame extends ApplicationAdapter {
 	btCollisionConfiguration collisionConfig;
 	btDispatcher dispatcher;
 	boolean collision;
+	float g= (float) 0.01568;
 
 	protected Stage stage;
 	protected Label label;
@@ -57,9 +59,9 @@ public class solidNotGame extends ApplicationAdapter {
 
 		modelBatch = new ModelBatch();
 		cam = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(10f, 10f, 10f);
+		cam.position.set(15f, 15f, 15f);
 		cam.lookAt(0,0,0);
-		cam.near = 1f;
+		cam.near = 0.0010f;
 		cam.far = 300f;
 		cam.update();
 
@@ -81,13 +83,14 @@ public class solidNotGame extends ApplicationAdapter {
 		model = mb.end();
 
 		ground = new ModelInstance(model, "ground");
+		ground.transform.setTranslation(-10f,-10f,-10f);
 
 		instances = new Array<ModelInstance>();
 		instances.add(ground);
 		instances.add(player.instance);
 
-		playerShape = new btBoxShape(new Vector3(0.05f, 0.05f, 1.5f));
-		groundShape = new btBoxShape(new Vector3(2.5f, 0.5f, 2.5f));
+		playerShape = new btBoxShape(new Vector3(0.2f, 2f, 0.2f));
+		groundShape = new btBoxShape(new Vector3(5f, 5f, 1f));
 
 		groundObject = new btCollisionObject();
 		groundObject.setCollisionShape(groundShape);
@@ -101,22 +104,22 @@ public class solidNotGame extends ApplicationAdapter {
 	}
 
 	public void camFollow(){
-		player.instance.transform.setTranslation(cam.position);
+		player.instance.transform.setTranslation(cam.position.x, cam.position.y-4.5f,cam.position.z);
 		playerObject.setWorldTransform(player.instance.transform);
-		cam.position.set(cam.position.x,cam.position.y-0.01f, cam.position.z);
+		cam.position.set(cam.position.x,cam.position.y-g, cam.position.z);
 	}
 
 	@Override
 	public void render() {
-		collision = checkCollision();
-		if (collision) {
-			cam.position.set(ground.transform.getScaleX(), ground.transform.getScaleY(), ground.transform.getScaleZ());
 
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) for (float i = (float) 0.2; i > 0; i-=0.01536) {
+			g-=i;
 		}
-
+		collision = checkCollision();
+		g+=0.01568;
+		if (!collision) {}
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
 		modelBatch.begin(cam);
 		modelBatch.render(instances, environment);
 		modelBatch.end();
